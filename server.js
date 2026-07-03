@@ -46,6 +46,12 @@ app.get('/projects', async (req, res) => {
     res.render('projects', { title });
 });
 
+app.get('/categories', (req, res) => {
+  res.render('categories', {
+    title: 'Service Project Categories'
+  });
+});
+
 const startServer = (port) => {
   const server = app.listen(port, () => {
     console.log(`Server is running at http://127.0.0.1:${port}`);
