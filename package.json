@@ -1,0 +1,28 @@
+{
+  "name": "cse-340",
+  "version": "1.0.0",
+  "description": "This repository contains coursework and code for the CSE-340 course.",
+  "homepage": "https://github.com/Nick2590/CSE-340#readme",
+  "bugs": {
+    "url": "https://github.com/Nick2590/CSE-340/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nick2590/CSE-340.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
