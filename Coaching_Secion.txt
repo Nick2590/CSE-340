@@ -1,0 +1,56 @@
+Week 01 Coaching Session Transcript
+
+Assistant: Welcome! Just to be clear from the start, this is a coaching session, not a test. It is perfectly okay—and even encouraged—to say "I don't know" or "I made a mistake." That's the fastest way we'll learn today.
+
+Assistant: What name would you like me to use during our coaching session?
+User: Nick
+
+Assistant: Thanks, Nick! What Express routing code can you paste?
+User: (Express routes)
+
+app.get('/', async (req, res) => {
+    const title = 'Home';
+    res.render('home', { title });
+});
+
+app.get('/organizations', async (req, res) => {
+    const title = 'Our Partner Organizations';
+    res.render('organizations', { title });
+});
+
+app.get('/projects', async (req, res) => {
+    const title = 'Service Projects';
+    res.render('projects', { title });
+});
+
+app.get('/categories', (req, res) => {
+  res.render('categories', {
+    title: 'Service Project Categories'
+  });
+});
+
+Assistant: Explains Express routing and asks about /projects
+User: it sves the string "ervice Projects" in a constant named title
+
+Assistant: asks what res.render does
+User: it tells expree to look for the projects.ejs
+
+Assistant: explains res.render and asks why pass title
+User: it is more flexible than hard coding it in by seperating the data for the page layout.
+
+Assistant: asks for JavaScript function
+User: startServer function with app.listen
+
+Assistant: explains JS principles and asks why wrapper function
+User: it makes the code more organized and reusable. instead up starting the server right away , all of the start up is in one funtion
+
+Assistant: asks for EJS snippet
+User: EJS page with header/footer partials and title
+
+Assistant: explains EJS partials and asks why used
+User: honestly because the assignment told me to do it. I didn't think of it a an opinion until the assignment told me.
+
+Assistant: reflects and asks for CSS snippet
+User: CSS for main layout styling (max-width, padding, shadows, etc.)
+
+Assistant: explains CSS styling and concludes session
