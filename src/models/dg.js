@@ -12,15 +12,22 @@ import { Pool } from 'pg';
  * The connection string format is:
  * postgresql://username:password@host:port/database
  */
+const connectionString = process.env.DATABASE_URL || process.env.DB_URL;
+
 const poolConfig = {
-    connectionString: process.env.DB_URL,
+    connectionString,
 };
 
-if (process.env.DB_URL?.includes('.render.com')) {
+// If the connection is to Render (or another managed provider using a TLS endpoint),
+// disable certificate verification to avoid local SSL issues. For increased security
+// in production, configure proper CA verification instead of disabling it.
+if (connectionString?.includes('.render.com')) {
     poolConfig.ssl = {
         rejectUnauthorized: false
     };
 } else {
+    // Keep ssl enabled by default for non-local hosts; for local dev this can be
+    // toggled via env if needed (e.g., set DB_SSL=false).
     poolConfig.ssl = true;
 }
 
