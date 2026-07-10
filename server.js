@@ -30,54 +30,52 @@ const loadEnvFile = () => {
 
 loadEnvFile();
 
-const { testConnection } = await import('./src/models/dg.js');
+const { testConnection, initializeDatabase } = await import('./src/models/dg.js');
 const { getAllOrganizations } = await import('./src/models/organizations.js');
+const { getAllProjects } = await import('./src/models/projects.js');
 
-// Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
-
-// Define the port number the server will listen on
 const PORT = Number(process.env.PORT) || 3000;
 
 const app = express();
 
-/**
-  * Configure Express middleware
-  */
-
-// Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set EJS as the templating engine
 app.set('view engine', 'ejs');
-
-// Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
-
 
 /**
  * Routes
  */
 app.get('/', async (req, res) => {
-    const title = 'Home';
-    res.render('home', { title });
+  const title = 'Home';
+  res.render('home', { title });
 });
 
 app.get('/organizations', async (req, res) => {
-    try {
-        const organizations = await getAllOrganizations();
-        const title = 'Our Partner Organizations';
+  try {
+    const organizations = await getAllOrganizations();
+    const title = 'Our Partner Organizations';
 
-        res.render('organizations', { title, organizations });
-    } catch (error) {
-        console.error('Error loading organizations:', error);
-        res.status(500).send('Unable to load organizations at this time.');
-    }
+    res.render('organizations', { title, organizations });
+  } catch (error) {
+    console.error('Error loading organizations:', error);
+    res.status(500).send('Unable to load organizations at this time.');
+  }
 });
 
 app.get('/projects', async (req, res) => {
+  try {
     const title = 'Service Projects';
-    res.render('projects', { title });
+    const projects = await getAllProjects();
+
+    console.log(projects);
+
+    res.render('projects', { title, projects });
+  } catch (error) {
+    console.error('Error loading projects:', error);
+    res.status(500).send('Unable to load projects at this time.');
+  }
 });
 
 app.get('/categories', (req, res) => {
@@ -89,6 +87,8 @@ app.get('/categories', (req, res) => {
 const startServer = async (port) => {
   try {
     await testConnection();
+    await initializeDatabase();
+
     const server = app.listen(port, () => {
       console.log(`Server is running at http://127.0.0.1:${port}`);
       console.log(`Environment: ${NODE_ENV}`);
