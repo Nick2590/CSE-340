@@ -3,6 +3,7 @@ import fs from 'fs';
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { getAllCategories } from './src/models/categories.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -78,10 +79,19 @@ app.get('/projects', async (req, res) => {
   }
 });
 
-app.get('/categories', (req, res) => {
-  res.render('categories', {
-    title: 'Service Project Categories'
-  });
+app.get('/categories', async (req, res) => {
+    try {
+        const title = 'Service Project Categories';
+        const categories = await getAllCategories();
+
+        res.render('categories', {
+            title,
+            categories
+        });
+    } catch (error) {
+        console.error('Unable to retrieve categories:', error);
+        res.status(500).send('Unable to load categories.');
+    }
 });
 
 const startServer = async (port) => {
