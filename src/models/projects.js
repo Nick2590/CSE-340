@@ -1,7 +1,7 @@
-import db from './dg.js';
+import { query } from './dg.js';
 
 const getAllProjects = async () => {
-  const query = `
+  const sql = `
     SELECT 
       project.project_id,
       project.title,
@@ -15,7 +15,7 @@ const getAllProjects = async () => {
     ORDER BY project.project_date;
   `;
 
-  const result = await db.query(query);
+  const result = await query(sql);
   return result.rows;
 };
 

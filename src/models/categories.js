@@ -1,4 +1,4 @@
-import db from './dg.js'
+import { query } from './dg.js';
 
 const getAllCategories = async () => {
     const sql = `
@@ -9,7 +9,7 @@ const getAllCategories = async () => {
         ORDER BY category_name;
     `;
 
-    const result = await pool.query(sql);
+    const result = await query(sql);
     return result.rows;
 };
 

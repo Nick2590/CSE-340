@@ -70,8 +70,6 @@ app.get('/projects', async (req, res) => {
     const title = 'Service Projects';
     const projects = await getAllProjects();
 
-    console.log(projects);
-
     res.render('projects', { title, projects });
   } catch (error) {
     console.error('Error loading projects:', error);
@@ -98,25 +96,24 @@ const startServer = async (port) => {
   try {
     await testConnection();
     await initializeDatabase();
-
-    const server = app.listen(port, () => {
-      console.log(`Server is running at http://127.0.0.1:${port}`);
-      console.log(`Environment: ${NODE_ENV}`);
-    });
-
-    server.on('error', (err) => {
-      if (err.code === 'EADDRINUSE') {
-        console.log(`Port ${port} is busy, trying ${port + 1}...`);
-        startServer(port + 1);
-      } else {
-        console.error(err);
-        process.exit(1);
-      }
-    });
   } catch (error) {
-    console.error('Error connecting to the database:', error);
-    process.exit(1);
+    console.warn('Database unavailable; continuing without database initialization:', error.message);
   }
+
+  const server = app.listen(port, () => {
+    console.log(`Server is running at http://127.0.0.1:${port}`);
+    console.log(`Environment: ${NODE_ENV}`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${port} is busy, trying ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error(err);
+      process.exit(1);
+    }
+  });
 };
 
 startServer(PORT);
