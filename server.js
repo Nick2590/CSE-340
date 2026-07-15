@@ -1,9 +1,8 @@
 
 import fs from 'fs';
 import express from 'express';
-import { fileURLToPath } from 'url';
 import path from 'path';
-import { getAllCategories } from './src/models/categories.js';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,7 +30,8 @@ const loadEnvFile = () => {
 
 loadEnvFile();
 
-const { testConnection, initializeDatabase } = await import('./src/models/dg.js');
+const { getAllCategories } = await import('./src/models/categories.js');
+const { initializeDatabase, testConnection } = await import('./src/models/dg.js');
 const { getAllOrganizations } = await import('./src/models/organizations.js');
 const { getAllProjects } = await import('./src/models/projects.js');
 
@@ -45,9 +45,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-/**
- * Routes
- */
+app.use((req, res, next) => {
+  if (NODE_ENV === 'development') {
+    console.log(`${req.method} ${req.url}`);
+  }
+  next();
+});
+
 app.get('/', async (req, res) => {
   const title = 'Home';
   res.render('home', { title });
@@ -78,18 +82,18 @@ app.get('/projects', async (req, res) => {
 });
 
 app.get('/categories', async (req, res) => {
-    try {
-        const title = 'Service Project Categories';
-        const categories = await getAllCategories();
+  try {
+    const title = 'Service Project Categories';
+    const categories = await getAllCategories();
 
-        res.render('categories', {
-            title,
-            categories
-        });
-    } catch (error) {
-        console.error('Unable to retrieve categories:', error);
-        res.status(500).send('Unable to load categories.');
-    }
+    res.render('categories', {
+      title,
+      categories,
+    });
+  } catch (error) {
+    console.error('Unable to retrieve categories:', error);
+    res.status(500).send('Unable to load categories.');
+  }
 });
 
 const startServer = async (port) => {

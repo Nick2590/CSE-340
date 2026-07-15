@@ -2,11 +2,14 @@
 
 <main>
     <h1><%= title %></h1>
+    <p>Explore the categories that guide our service initiatives.</p>
 
-    <% if (categories.length > 0) { %>
-        <ul class="category-list">
+    <% if (categories && categories.length > 0) { %>
+        <ul class="card-list">
             <% categories.forEach((category) => { %>
-                <li><%= category.category_name %></li>
+                <li class="card">
+                    <h2><%= category.category_name %></h2>
+                </li>
             <% }); %>
         </ul>
     <% } else { %>
