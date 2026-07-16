@@ -10,7 +10,11 @@
                 <li class="card">
                     <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
                     <div>
-                        <h2><%= organization.name %></h2>
+                        <h2>
+                            <a href="/organization/<%= organization.organization_id %>">
+                                <%= organization.name %>
+                            </a>
+                        </h2>
                         <p><%= organization.description %></p>
                         <p><strong>Email:</strong> <%= organization.contact_email %></p>
                     </div>

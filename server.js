@@ -2,7 +2,8 @@
 import fs from 'fs';
 import express from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
+import router from './src/routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,73 +31,67 @@ const loadEnvFile = () => {
 
 loadEnvFile();
 
-const { getAllCategories } = await import('./src/models/categories.js');
 const { initializeDatabase, testConnection } = await import('./src/models/dg.js');
-const { getAllOrganizations } = await import('./src/models/organizations.js');
-const { getAllProjects } = await import('./src/models/projects.js');
 
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 const PORT = Number(process.env.PORT) || 3000;
 
-const app = express();
+const createApp = () => {
+  const app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
+  app.locals.NODE_ENV = NODE_ENV;
+  app.use(express.static(path.join(__dirname, 'public')));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src/views'));
+  app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname, 'src/views'));
 
-app.use((req, res, next) => {
-  if (NODE_ENV === 'development') {
-    console.log(`${req.method} ${req.url}`);
-  }
-  next();
-});
+  // Middleware to log all incoming requests
+  app.use((req, res, next) => {
+    if (NODE_ENV === 'development') {
+      console.log(`${req.method} ${req.url}`);
+    }
+    next();
+  });
 
-app.get('/', async (req, res) => {
-  const title = 'Home';
-  res.render('home', { title });
-});
+  // Middleware to make NODE_ENV available to all templates
+  app.use((req, res, next) => {
+    res.locals.NODE_ENV = NODE_ENV;
+    next();
+  });
 
-app.get('/organizations', async (req, res) => {
-  try {
-    const organizations = await getAllOrganizations();
-    const title = 'Our Partner Organizations';
+  app.use(router);
 
-    res.render('organizations', { title, organizations });
-  } catch (error) {
-    console.error('Error loading organizations:', error);
-    res.status(500).send('Unable to load organizations at this time.');
-  }
-});
+  // Catch-all route for 404 errors
+  app.use((req, res, next) => {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err);
+  });
 
-app.get('/projects', async (req, res) => {
-  try {
-    const title = 'Service Projects';
-    const projects = await getAllProjects();
+  // Global error handler
+  app.use((err, req, res, next) => {
+    console.error('Error occurred:', err.message);
+    console.error('Stack trace:', err.stack);
 
-    res.render('projects', { title, projects });
-  } catch (error) {
-    console.error('Error loading projects:', error);
-    res.status(500).send('Unable to load projects at this time.');
-  }
-});
+    const status = err.status || 500;
+    const template = status === 404 ? '404' : '500';
 
-app.get('/categories', async (req, res) => {
-  try {
-    const title = 'Service Project Categories';
-    const categories = await getAllCategories();
+    const context = {
+      title: status === 404 ? 'Page Not Found' : 'Server Error',
+      error: err.message,
+      stack: err.stack,
+      NODE_ENV,
+    };
 
-    res.render('categories', {
-      title,
-      categories,
-    });
-  } catch (error) {
-    console.error('Unable to retrieve categories:', error);
-    res.status(500).send('Unable to load categories.');
-  }
-});
+    res.status(status).render(`errors/${template}`, context);
+  });
 
-const startServer = async (port) => {
+  return app;
+};
+
+const app = createApp();
+
+const startServer = async (port = PORT) => {
   try {
     await testConnection();
     await initializeDatabase();
@@ -118,6 +113,14 @@ const startServer = async (port) => {
       process.exit(1);
     }
   });
+
+  return server;
 };
 
-startServer(PORT);
+const isMainModule = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isMainModule) {
+  startServer(PORT);
+}
+
+export { app, createApp, startServer };

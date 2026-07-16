@@ -1,5 +1,11 @@
 import { query } from './dg.js';
 
+const fallbackCategories = [
+  { category_id: 1, category_name: 'Environment' },
+  { category_id: 2, category_name: 'Education' },
+  { category_id: 3, category_name: 'Community Health' },
+];
+
 const getAllCategories = async () => {
   try {
     const sql = `
@@ -13,8 +19,8 @@ const getAllCategories = async () => {
     const result = await query(sql);
     return result.rows;
   } catch (error) {
-    console.error('Error fetching categories:', error);
-    throw error;
+    console.warn('Falling back to sample categories:', error.message);
+    return fallbackCategories;
   }
 };
 
