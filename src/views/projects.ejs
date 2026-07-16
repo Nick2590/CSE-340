@@ -3,14 +3,22 @@
 <main>
     <h1><%= title %></h1>
 
-    <% if (projects && projects.length > 0) { %>
+    <% if (projects.length > 0) { %>
         <ul class="card-list">
             <% projects.forEach((project) => { %>
                 <li class="card">
-                    <h2><%= project.title %></h2>
-                    <p><strong>Organization:</strong> <%= project.organization_name %></p>
-                    <p><strong>Category:</strong> <%= project.category_name %></p>
-                    <p><strong>Date:</strong> <%= new Date(project.project_date).toLocaleDateString('en-US', {
+                    <h2>
+                        <a href="/project/<%= project.project_id %>">
+                            <%= project.title %>
+                        </a>
+                    </h2>
+                    <p>
+                        <strong>Organization:</strong>
+                        <a href="/organization/<%= project.organization_id %>">
+                            <%= project.organization_name %>
+                        </a>
+                    </p>
+                    <p><strong>Date:</strong> <%= new Date(project.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -21,7 +29,7 @@
             <% }); %>
         </ul>
     <% } else { %>
-        <p>No service projects are currently available.</p>
+        <p>There are currently no upcoming service projects.</p>
     <% } %>
 </main>
 

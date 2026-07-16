@@ -93,7 +93,101 @@ const getProjectsByOrganizationId = async (organizationId) => {
   }
 };
 
+const getUpcomingProjects = async (number_of_projects) => {
+  const limit = Number.parseInt(number_of_projects, 10);
+
+  if (Number.isNaN(limit) || limit < 1) {
+    return [];
+  }
+
+  try {
+    const sql = `
+      SELECT
+        p.project_id,
+        p.title,
+        p.description,
+        p.project_date AS date,
+        p.location,
+        p.organization_id,
+        o.name AS organization_name
+      FROM projects AS p
+      JOIN organizations AS o
+        ON p.organization_id = o.organization_id
+      WHERE p.project_date >= CURRENT_DATE
+      ORDER BY p.project_date ASC
+      LIMIT $1;
+    `;
+
+    const result = await query(sql, [limit]);
+    return result.rows;
+  } catch (error) {
+    console.warn('Falling back to sample upcoming projects:', error.message);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return fallbackProjects
+      .filter((project) => {
+        const projectDate = new Date(project.date);
+        projectDate.setHours(0, 0, 0, 0);
+        return projectDate >= today;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, limit)
+      .map((project) => ({
+        project_id: project.project_id,
+        title: project.title,
+        description: project.description,
+        date: project.date,
+        location: project.location,
+        organization_id: project.organization_id,
+        organization_name: project.organization_name,
+      }));
+  }
+};
+
+const getProjectDetails = async (id) => {
+  try {
+    const sql = `
+      SELECT
+        p.project_id,
+        p.title,
+        p.description,
+        p.project_date AS date,
+        p.location,
+        p.organization_id,
+        o.name AS organization_name
+      FROM projects AS p
+      JOIN organizations AS o
+        ON p.organization_id = o.organization_id
+      WHERE p.project_id = $1;
+    `;
+
+    const result = await query(sql, [id]);
+    return result.rows.length > 0 ? result.rows[0] : null;
+  } catch (error) {
+    console.warn('Falling back to sample project details:', error.message);
+
+    const fallbackProject = fallbackProjects.find((project) => String(project.project_id) === String(id));
+    if (!fallbackProject) {
+      return null;
+    }
+
+    return {
+      project_id: fallbackProject.project_id,
+      title: fallbackProject.title,
+      description: fallbackProject.description,
+      date: fallbackProject.date,
+      location: fallbackProject.location,
+      organization_id: fallbackProject.organization_id,
+      organization_name: fallbackProject.organization_name,
+    };
+  }
+};
+
 export {
   getAllProjects,
   getProjectsByOrganizationId,
+  getUpcomingProjects,
+  getProjectDetails,
 };
