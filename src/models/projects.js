@@ -51,14 +51,23 @@ const getAllProjects = async () => {
         p.title,
         p.description,
         p.location,
-        p.project_date,
+        p.project_date AS date,
         o.name AS organization_name,
-        c.category_name
+        STRING_AGG(c.category_name, ', ' ORDER BY c.category_name) AS category_name
       FROM projects AS p
       JOIN organizations AS o
         ON p.organization_id = o.organization_id
-      JOIN categories AS c
-        ON p.category_id = c.category_id
+      LEFT JOIN project_categories AS pc
+        ON p.project_id = pc.project_id
+      LEFT JOIN categories AS c
+        ON pc.category_id = c.category_id
+      GROUP BY
+        p.project_id,
+        p.title,
+        p.description,
+        p.location,
+        p.project_date,
+        o.name
       ORDER BY p.project_date DESC, p.title;
     `;
 
