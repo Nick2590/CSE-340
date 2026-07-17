@@ -3,7 +3,7 @@ import { query } from './dg.js';
 const getAllOrganizations = async () => {
   const sql = `
     SELECT organization_id, name, description, contact_email, logo_filename
-    FROM organizations
+    FROM organization
     ORDER BY name;
   `;
 
@@ -19,7 +19,7 @@ const getOrganizationDetails = async (organizationId) => {
       description,
       contact_email,
       logo_filename
-    FROM organizations
+    FROM organization
     WHERE organization_id = $1;
   `;
 

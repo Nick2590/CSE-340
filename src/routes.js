@@ -1,5 +1,8 @@
 import express from 'express';
-import { showCategoriesPage } from './controllers/categories.js';
+import {
+  showCategoriesPage,
+  showCategoryDetailsPage,
+} from './controllers/categories.js';
 import { showHomePage } from './controllers/index.js';
 import {
   showOrganizationDetailsPage,
@@ -19,6 +22,7 @@ router.get('/organization/:id', showOrganizationDetailsPage);
 router.get('/projects', showProjectsPage);
 router.get('/project/:id', showProjectDetailsPage);
 router.get('/categories', showCategoriesPage);
+router.get('/category/:id', showCategoryDetailsPage);
 router.get('/test-error', testErrorPage);
 
 export default router;
