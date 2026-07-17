@@ -50,7 +50,19 @@ INSERT INTO organizations (name, description, contact_email, logo_filename)
 VALUES
   ('BrightFuture Builders', 'A nonprofit focused on improving community infrastructure through sustainable construction projects.', 'info@brightfuturebuilders.org', 'brightfuture-logo.png'),
   ('GreenHarvest Growers', 'An urban farming collective promoting food sustainability and education in local neighborhoods.', 'contact@greenharvest.org', 'greenharvest-logo.png'),
-  ('UnityServe Volunteers', 'A volunteer coordination group supporting local charities and service initiatives.', 'hello@unityserve.org', 'unityserve-logo.png');
+  ('UnityServe Volunteers', 'A volunteer coordination group supporting local charities and service initiatives.', 'hello@unityserve.org', 'unityserve-logo.png'),
+  ('HelpingHands Outreach', 'Coordinates neighborhood outreach events that provide food, clothing, and referral services for families in need.', 'connect@helpinghandsoutreach.org', 'helpinghands-logo.png'),
+  ('HopeBridge Mentors', 'Pairs trained mentors with youth to support academic growth, leadership development, and career readiness.', 'team@hopebridgementors.org', 'hopebridge-logo.png'),
+  ('CareCircle Relief', 'Organizes volunteer teams for emergency relief, community recovery projects, and supply distribution.', 'support@carecirclerelief.org', 'carecircle-logo.png'),
+  ('RiverCity Tutors', 'Provides free after-school tutoring and literacy programs for elementary and middle school students.', 'info@rivercitytutors.org', 'rivercity-logo.png'),
+  ('MealsForNeighbors Network', 'Delivers nutritious meals and wellness check-ins to seniors and homebound residents.', 'hello@mealsforneighbors.org', 'mealsforneighbors-logo.png'),
+  ('SafeHarbor Housing Aid', 'Mobilizes volunteers to repair transitional housing and assist residents moving into stable homes.', 'contact@safeharborhousing.org', 'safeharbor-logo.png'),
+  ('TechAccess Community Lab', 'Expands digital equity by offering device refurbishment, internet access support, and tech training.', 'reach@techaccesslab.org', 'techaccess-logo.png'),
+  ('OpenArms Refugee Support', 'Supports refugee families with language assistance, job-readiness workshops, and resettlement resources.', 'welcome@openarmssupport.org', 'openarms-logo.png'),
+  ('CleanStreets Collective', 'Leads local cleanup drives, recycling education, and beautification efforts in public spaces.', 'volunteer@cleanstreetscollective.org', 'cleanstreets-logo.png'),
+  ('HealthLink Mobile Clinic', 'Coordinates mobile wellness services, screenings, and preventive health education across neighborhoods.', 'care@healthlinkmobile.org', 'healthlink-logo.png'),
+  ('VeteransForward Alliance', 'Connects veterans with housing, career, and peer-support services through community partnerships.', 'service@veteransforward.org', 'veteransforward-logo.png'),
+  ('YouthBuild Action Team', 'Engages teens in supervised service projects focused on civic leadership and community improvement.', 'join@youthbuildaction.org', 'youthbuild-logo.png');
 
 INSERT INTO categories (category_name)
 VALUES
