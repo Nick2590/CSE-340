@@ -4,7 +4,7 @@ import {
 } from '../models/categories.js';
 import { getProjectsByCategoryId } from '../models/projects.js';
 
-const showCategoriesPage = async (req, res) => {
+const showCategoriesPage = async (req, res, next) => {
   try {
     const title = 'Service Project Categories';
     const categories = await getAllCategories();
@@ -15,8 +15,7 @@ const showCategoriesPage = async (req, res) => {
       NODE_ENV: process.env.NODE_ENV?.toLowerCase() || 'production',
     });
   } catch (error) {
-    console.error('Unable to retrieve categories:', error);
-    res.status(500).send('Unable to load categories.');
+    next(error);
   }
 };
 

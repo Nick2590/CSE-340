@@ -5,15 +5,14 @@ import {
 
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
-const showOrganizationsPage = async (req, res) => {
+const showOrganizationsPage = async (req, res, next) => {
   try {
     const organizations = await getAllOrganizations();
     const title = 'Our Partner Organizations';
 
     res.render('organizations', { title, organizations, NODE_ENV: process.env.NODE_ENV?.toLowerCase() || 'production' });
   } catch (error) {
-    console.error('Error loading organizations:', error);
-    res.status(500).send('Unable to load organizations at this time.');
+    next(error);
   }
 };
 

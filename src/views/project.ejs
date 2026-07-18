@@ -26,6 +26,25 @@
             </a>
         </p>
 
+        <section class="project-categories">
+            <h2>Categories</h2>
+
+            <% if (categories.length > 0) { %>
+                <div class="category-tags">
+                    <% categories.forEach(category => { %>
+                        <a
+                            class="category-tag"
+                            href="/category/<%= category.category_id %>"
+                        >
+                            <%= category.category_name %>
+                        </a>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>No categories are assigned to this project.</p>
+            <% } %>
+        </section>
+
         <p>
             <a href="/projects">Back to Upcoming Projects</a>
         </p>
