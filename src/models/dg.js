@@ -6,7 +6,12 @@ import { Pool } from 'pg';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const connectionString = process.env.DATABASE_URL || process.env.DB_URL || 'postgres://postgres:postgres@localhost:5432/cse340';
+const connectionString = process.env.DATABASE_URL || process.env.DB_URL;
+
+if (!connectionString) {
+  throw new Error('No database connection string found. Set DATABASE_URL or DB_URL in your environment.');
+}
+
 const ssl = connectionString.includes('render.com') ? { rejectUnauthorized: false } : false;
 
 const pool = new Pool({

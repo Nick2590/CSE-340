@@ -3,7 +3,6 @@ import fs from 'fs';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import router from './src/routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +31,7 @@ const loadEnvFile = () => {
 loadEnvFile();
 
 const { initializeDatabase, testConnection } = await import('./src/models/dg.js');
+const { default: router } = await import('./src/routes.js');
 
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 const PORT = Number(process.env.PORT) || 3000;
