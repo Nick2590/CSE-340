@@ -45,6 +45,9 @@ const createApp = () => {
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'src/views'));
 
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
   // Middleware to log all incoming requests
   app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
