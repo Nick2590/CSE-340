@@ -1,8 +1,10 @@
 
 import fs from 'fs';
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import flash from './src/middleware/flash.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +32,8 @@ const loadEnvFile = () => {
 
 loadEnvFile();
 
+const SESSION_SECRET = process.env.SESSION_SECRET;
+
 const { initializeDatabase, testConnection } = await import('./src/models/dg.js');
 const { default: router } = await import('./src/routes.js');
 
@@ -44,6 +48,17 @@ const createApp = () => {
 
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'src/views'));
+
+  app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 60 * 60 * 1000,
+    },
+  }));
+
+  app.use(flash);
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
