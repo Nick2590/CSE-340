@@ -67,8 +67,37 @@ const createOrganization = async (
   return result.rows[0].organization_id;
 };
 
+const updateOrganization = async (
+  id,
+  name,
+  description,
+  contactEmail,
+  logoFilename,
+) => {
+  const sql = `
+    UPDATE organization
+    SET
+      name = $1,
+      description = $2,
+      contact_email = $3,
+      logo_filename = $4
+    WHERE organization_id = $5;
+  `;
+
+  const queryParams = [
+    name,
+    description,
+    contactEmail,
+    logoFilename,
+    id,
+  ];
+
+  await query(sql, queryParams);
+};
+
 export {
   getAllOrganizations,
   getOrganizationDetails,
   createOrganization,
+  updateOrganization,
 };
