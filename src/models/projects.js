@@ -119,10 +119,47 @@ const getProjectDetails = async (id) => {
   return result.rows.length > 0 ? result.rows[0] : null;
 };
 
+const createProject = async (
+  title,
+  description,
+  location,
+  date,
+  organizationId,
+) => {
+  const sql = `
+    INSERT INTO project (
+      title,
+      description,
+      location,
+      project_date,
+      organization_id
+    )
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING project_id;
+  `;
+
+  const queryParams = [
+    title,
+    description,
+    location,
+    date,
+    organizationId,
+  ];
+
+  const result = await query(sql, queryParams);
+
+  if (result.rows.length === 0) {
+    throw new Error('Failed to create project');
+  }
+
+  return result.rows[0].project_id;
+};
+
 export {
   getAllProjects,
   getProjectsByOrganizationId,
   getProjectsByCategoryId,
   getUpcomingProjects,
   getProjectDetails,
+  createProject,
 };
