@@ -21,6 +21,12 @@
                 </a>
             </p>
         <% } %>
+
+        <p>
+            <a href="/edit-organization/<%= organizationDetails.organization_id %>">
+                Edit Organization
+            </a>
+        </p>
     </section>
 
     <section class="organization-projects">
@@ -49,12 +55,6 @@
             </p>
         <% } %>
     </section>
-
-    <p>
-        <a href="/edit-organization/<%= organizationDetails.organization_id %>">
-            Edit Organization
-        </a>
-    </p>
 
     <p>
         <a href="/organizations">
