@@ -2,6 +2,7 @@ import {
   createProject,
   getProjectDetails,
   getUpcomingProjects,
+  updateProject,
 } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
@@ -75,6 +76,30 @@ const showNewProjectForm = async (req, res, next) => {
   }
 };
 
+const showEditProjectForm = async (req, res, next) => {
+  try {
+    const projectId = req.params.id;
+    const project = await getProjectDetails(projectId);
+
+    if (!project) {
+      const err = new Error('Project Not Found');
+      err.status = 404;
+      return next(err);
+    }
+
+    const organizations = await getAllOrganizations();
+    const title = 'Edit Service Project';
+
+    res.render('edit-project', {
+      title,
+      project,
+      organizations,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const processNewProjectForm = async (req, res, next) => {
   try {
     const results = validationResult(req);
@@ -111,6 +136,45 @@ const processNewProjectForm = async (req, res, next) => {
   }
 };
 
+const processEditProjectForm = async (req, res, next) => {
+  try {
+    const projectId = req.params.id;
+
+    const results = validationResult(req);
+
+    if (!results.isEmpty()) {
+      results.array().forEach((error) => {
+        req.flash('error', error.msg);
+      });
+
+      return res.redirect(`/edit-project/${projectId}`);
+    }
+
+    const {
+      organizationId,
+      title,
+      description,
+      location,
+      date,
+    } = req.body;
+
+    await updateProject(
+      projectId,
+      title,
+      description,
+      location,
+      date,
+      organizationId,
+    );
+
+    req.flash('success', 'Service project updated successfully!');
+
+    res.redirect(`/project/${projectId}`);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const showProjectDetailsPage = async (req, res, next) => {
   try {
     const projectId = req.params.id;
@@ -139,6 +203,8 @@ export {
   projectValidation,
   showProjectsPage,
   showNewProjectForm,
+  showEditProjectForm,
   processNewProjectForm,
+  processEditProjectForm,
   showProjectDetailsPage,
 };
