@@ -173,6 +173,50 @@ p {
 }
 
 /* ==========================
+   Forms
+========================== */
+
+.auth-form {
+    display: grid;
+    gap: 1rem;
+    max-width: 560px;
+}
+
+.form-group {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #12355b;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #b9c9df;
+    border-radius: 8px;
+    font: inherit;
+    background: #ffffff;
+    color: #1f2937;
+}
+
+.form-group input:focus {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    border-color: #2563eb;
+}
+
+.form-errors {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+}
+
+.form-errors li + li {
+    margin-top: 0.25rem;
+}
+
+/* ==========================
    Buttons
 ========================== */
 
@@ -270,5 +314,9 @@ footer {
 
     .main-logo {
         max-width: 250px;
+    }
+
+    .auth-form {
+        max-width: 100%;
     }
 }

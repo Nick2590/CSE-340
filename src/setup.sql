@@ -4,6 +4,8 @@
 -- ========================================
 
 -- Drop tables in dependency order
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS project_category;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS project;
@@ -87,6 +89,66 @@ CREATE TABLE project_category (
         FOREIGN KEY (category_id)
         REFERENCES category(category_id)
         ON DELETE CASCADE
+);
+
+
+-- ========================================
+-- Roles Table
+-- ========================================
+
+CREATE TABLE roles (
+    role_id SERIAL,
+    role_name VARCHAR(50) NOT NULL,
+    role_description TEXT,
+
+    CONSTRAINT pk_roles
+        PRIMARY KEY (role_id),
+
+    CONSTRAINT uq_roles_role_name
+        UNIQUE (role_name)
+);
+
+
+-- ========================================
+-- Users Table
+-- ========================================
+
+CREATE TABLE users (
+    user_id SERIAL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role_id INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_users
+        PRIMARY KEY (user_id),
+
+    CONSTRAINT uq_users_email
+        UNIQUE (email),
+
+    CONSTRAINT fk_users_role
+        FOREIGN KEY (role_id)
+        REFERENCES roles(role_id)
+);
+
+
+-- ========================================
+-- Insert Default Roles
+-- ========================================
+
+INSERT INTO roles (
+    role_name,
+    role_description
+)
+VALUES
+(
+    'user',
+    'Standard user with basic access'
+),
+(
+    'admin',
+    'Administrator with full system access'
 );
 
 
@@ -459,3 +521,33 @@ FROM project AS p
 LEFT JOIN project_category AS pc
     ON p.project_id = pc.project_id
 WHERE pc.category_id IS NULL;
+
+
+-- ========================================
+-- Verify Roles and Users Tables
+-- ========================================
+
+-- SELECT * FROM roles;
+-- SELECT * FROM users;
+-- INSERT INTO users (
+--     name,
+--     email,
+--     password_hash,
+--     role_id
+-- )
+-- VALUES (
+--     'Temporary Test User',
+--     'temp.user@example.com',
+--     'placeholder_hash',
+--     1
+-- );
+-- SELECT
+--     u.user_id,
+--     u.name,
+--     u.email,
+--     r.role_name
+-- FROM users AS u
+-- JOIN roles AS r
+--     ON u.role_id = r.role_id;
+-- DELETE FROM users
+-- WHERE email = 'temp.user@example.com';

@@ -30,10 +30,26 @@ import {
   showProjectsPage,
 } from './controllers/projects.js';
 import { testErrorPage } from './controllers/errors.js';
+import {
+  processLoginForm,
+  processLogout,
+  processUserRegistrationForm,
+  requireLogin,
+  showDashboard,
+  showLoginForm,
+  showUserRegistrationForm,
+  userValidation,
+} from './controllers/users.js';
 
 const router = express.Router();
 
 router.get('/', showHomePage);
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+router.get('/logout', processLogout);
+router.get('/dashboard', requireLogin, showDashboard);
+router.get('/register', showUserRegistrationForm);
+router.post('/register', userValidation, processUserRegistrationForm);
 router.get('/organizations', showOrganizationsPage);
 router.get('/new-organization', showNewOrganizationForm);
 router.post('/new-organization', organizationValidation, processNewOrganizationForm);

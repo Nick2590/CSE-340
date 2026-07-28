@@ -73,6 +73,8 @@ const createApp = () => {
 
   // Middleware to make NODE_ENV available to all templates
   app.use((req, res, next) => {
+    res.locals.isLoggedIn = Boolean(req.session && req.session.user);
+    res.locals.currentUser = req.session && req.session.user ? req.session.user : null;
     res.locals.NODE_ENV = NODE_ENV;
     next();
   });
