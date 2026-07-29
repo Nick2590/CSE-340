@@ -149,6 +149,21 @@ const requireLogin = (req, res, next) => {
   next();
 };
 
+const requireRole = (role) => {
+  return (req, res, next) => {
+    if (
+      req.session &&
+      req.session.user &&
+      req.session.user.role_name === role
+    ) {
+      return next();
+    }
+
+    req.flash('error', 'You do not have permission to access that page.');
+    return res.redirect('/');
+  };
+};
+
 const showDashboard = async (req, res, next) => {
   try {
     const { name, email } = req.session.user;
@@ -185,6 +200,7 @@ export {
   showLoginForm,
   processLoginForm,
   requireLogin,
+  requireRole,
   showDashboard,
   processLogout,
 };

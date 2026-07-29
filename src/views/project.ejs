@@ -26,11 +26,13 @@
             </a>
         </p>
 
-        <p>
-            <a href="/edit-project/<%= project.project_id %>">
-                Edit Project
-            </a>
-        </p>
+        <% if (user && user.role_name === 'admin') { %>
+            <p>
+                <a href="/edit-project/<%= project.project_id %>">
+                    Edit Project
+                </a>
+            </p>
+        <% } %>
 
         <section class="project-categories">
             <h2>Categories</h2>
@@ -50,11 +52,13 @@
                 <p>No categories are assigned to this project.</p>
             <% } %>
 
-            <p>
-                <a href="/project/<%= project.project_id %>/assign-categories">
-                    Edit Categories
-                </a>
-            </p>
+            <% if (user && user.role_name === 'admin') { %>
+                <p>
+                    <a href="/project/<%= project.project_id %>/assign-categories">
+                        Edit Categories
+                    </a>
+                </p>
+            <% } %>
         </section>
 
         <p>
