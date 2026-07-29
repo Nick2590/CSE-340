@@ -1,6 +1,11 @@
 import bcrypt from 'bcrypt';
 import { body, validationResult } from 'express-validator';
-import { authenticateUser, createUser, getUserByEmail } from '../models/users.js';
+import {
+  authenticateUser,
+  createUser,
+  getAllUsers,
+  getUserByEmail,
+} from '../models/users.js';
 
 const userValidation = [
   body('name')
@@ -151,17 +156,33 @@ const requireLogin = (req, res, next) => {
 
 const requireRole = (role) => {
   return (req, res, next) => {
-    if (
-      req.session &&
-      req.session.user &&
-      req.session.user.role_name === role
-    ) {
-      return next();
+    const user = req.session?.user;
+
+    if (!user) {
+      req.flash('error', 'You must log in to view that page.');
+      return res.redirect('/login');
     }
 
-    req.flash('error', 'You do not have permission to access that page.');
-    return res.redirect('/');
+    if (user.role_name !== role) {
+      req.flash('error', 'You do not have permission to view that page.');
+      return res.redirect('/dashboard');
+    }
+
+    return next();
   };
+};
+
+const showUsersPage = async (req, res, next) => {
+  try {
+    const users = await getAllUsers();
+
+    res.render('users', {
+      title: 'Registered Users',
+      users,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const showDashboard = async (req, res, next) => {
@@ -202,5 +223,6 @@ export {
   requireLogin,
   requireRole,
   showDashboard,
+  showUsersPage,
   processLogout,
 };

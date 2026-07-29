@@ -1,0 +1,32 @@
+<%- include('partials/header', { title }) %>
+
+<main class="users-page">
+    <h1><%= title %></h1>
+
+    <% if (users && users.length > 0) { %>
+        <div class="table-wrapper">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach((account) => { %>
+                        <tr>
+                            <td><%= account.name %></td>
+                            <td><%= account.email %></td>
+                            <td><%= account.role_name %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <p>No registered users were found.</p>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>

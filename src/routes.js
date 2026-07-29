@@ -38,6 +38,7 @@ import {
   requireRole,
   showDashboard,
   showLoginForm,
+  showUsersPage,
   showUserRegistrationForm,
   userValidation,
 } from './controllers/users.js';
@@ -49,6 +50,7 @@ router.get('/login', showLoginForm);
 router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
 router.get('/dashboard', requireLogin, showDashboard);
+router.get('/users', requireLogin, requireRole('admin'), showUsersPage);
 router.get('/register', showUserRegistrationForm);
 router.post('/register', userValidation, processUserRegistrationForm);
 router.get('/organizations', showOrganizationsPage);

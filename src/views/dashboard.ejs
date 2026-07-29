@@ -8,6 +8,12 @@
     <div class="card">
         <p><strong>Name:</strong> <%= name %></p>
         <p><strong>Email:</strong> <%= email %></p>
+
+        <% if (user && user.role_name === 'admin') { %>
+            <p class="admin-users-link-wrap">
+                <a class="btn admin-users-link" href="/users">View Registered Users</a>
+            </p>
+        <% } %>
     </div>
 </main>
 
