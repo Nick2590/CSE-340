@@ -26,6 +26,32 @@
             </a>
         </p>
 
+        <% if (isLoggedIn) { %>
+            <section class="volunteer-panel" aria-label="Volunteer actions">
+                <h2>Volunteer</h2>
+
+                <% if (isVolunteering) { %>
+                    <p class="volunteer-status volunteer-status-active">
+                        You are volunteering for this project.
+                    </p>
+
+                    <form method="POST" action="/project/<%= project.project_id %>/unvolunteer">
+                        <input type="hidden" name="returnTo" value="project">
+                        <button class="btn btn-danger" type="submit">Remove Me as a Volunteer</button>
+                    </form>
+                <% } else { %>
+                    <p class="volunteer-status">
+                        Sign up to volunteer for this service project.
+                    </p>
+
+                    <form method="POST" action="/project/<%= project.project_id %>/volunteer">
+                        <input type="hidden" name="returnTo" value="project">
+                        <button class="btn" type="submit">Volunteer for This Project</button>
+                    </form>
+                <% } %>
+            </section>
+        <% } %>
+
         <% if (user && user.role_name === 'admin') { %>
             <p>
                 <a href="/edit-project/<%= project.project_id %>">

@@ -222,6 +222,7 @@ p {
 
 button,
 .btn {
+    display: inline-block;
     background-color: #2563eb;
     color: white;
     border: none;
@@ -229,12 +230,23 @@ button,
     border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
     transition: background-color 0.3s ease;
 }
 
 button:hover,
 .btn:hover {
     background-color: #1d4ed8;
+}
+
+.btn-danger {
+    background-color: #b42318;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+    background-color: #912018;
 }
 
 /* ==========================
@@ -333,6 +345,60 @@ footer {
 }
 
 /* ==========================
+   Volunteer Features
+========================== */
+
+.volunteer-panel {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    border: 1px solid #dce7f5;
+    border-radius: 10px;
+    background: #f8fbff;
+}
+
+.volunteer-status {
+    margin-bottom: 1rem;
+    color: #12355b;
+}
+
+.volunteer-status-active {
+    color: #155724;
+    font-weight: 700;
+}
+
+.dashboard-volunteer-projects {
+    margin-top: 2rem;
+}
+
+.volunteer-project-list {
+    margin-top: 1rem;
+}
+
+.volunteer-project-card h3 {
+    color: #12355b;
+    margin-bottom: 0.75rem;
+}
+
+.volunteer-project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.volunteer-project-actions form {
+    margin: 0;
+}
+
+.empty-state {
+    padding: 1rem;
+    border-radius: 10px;
+    background: #f8fbff;
+    border: 1px dashed #b9c9df;
+    color: #12355b;
+}
+
+/* ==========================
    Responsive Design
 ========================== */
 
@@ -356,6 +422,17 @@ footer {
     main {
         margin: 1rem;
         padding: 1.5rem;
+    }
+
+    .volunteer-project-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .volunteer-project-actions .btn,
+    .volunteer-project-actions button {
+        width: 100%;
+        text-align: center;
     }
 
     .main-logo {

@@ -37,12 +37,16 @@ const testConnection = async () => {
 
 const initializeDatabase = async () => {
   const setupScriptPath = path.resolve(__dirname, '..', '..', 'setup.sql');
+  const fallbackSetupScriptPath = path.resolve(__dirname, '..', 'setup.sql');
+  const resolvedSetupScriptPath = fs.existsSync(setupScriptPath)
+    ? setupScriptPath
+    : fallbackSetupScriptPath;
 
-  if (!fs.existsSync(setupScriptPath)) {
-    throw new Error(`Database setup file not found at ${setupScriptPath}`);
+  if (!fs.existsSync(resolvedSetupScriptPath)) {
+    throw new Error(`Database setup file not found at ${setupScriptPath} or ${fallbackSetupScriptPath}`);
   }
 
-  const scriptContent = fs.readFileSync(setupScriptPath, 'utf8');
+  const scriptContent = fs.readFileSync(resolvedSetupScriptPath, 'utf8');
   const cleanedSql = scriptContent.replace(/--.*$/gm, '').replace(/\r/g, '');
   const statements = cleanedSql
     .split(';')

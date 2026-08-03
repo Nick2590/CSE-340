@@ -6,6 +6,7 @@ import {
   getAllUsers,
   getUserByEmail,
 } from '../models/users.js';
+import { getVolunteerProjectsByUserId } from '../models/volunteers.js';
 
 const userValidation = [
   body('name')
@@ -187,12 +188,18 @@ const showUsersPage = async (req, res, next) => {
 
 const showDashboard = async (req, res, next) => {
   try {
-    const { name, email } = req.session.user;
+    const {
+      user_id: userId,
+      name,
+      email,
+    } = req.session.user;
+    const volunteerProjects = await getVolunteerProjectsByUserId(userId);
 
     res.render('dashboard', {
       title: 'Dashboard',
       name,
       email,
+      volunteerProjects,
     });
   } catch (error) {
     next(error);

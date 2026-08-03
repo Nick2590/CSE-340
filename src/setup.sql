@@ -1,9 +1,9 @@
-
 -- ========================================
 -- CSE 340 Database Setup
 -- ========================================
 
 -- Drop tables in dependency order
+DROP TABLE IF EXISTS user_project;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS project_category;
@@ -130,6 +130,30 @@ CREATE TABLE users (
     CONSTRAINT fk_users_role
         FOREIGN KEY (role_id)
         REFERENCES roles(role_id)
+);
+
+
+-- ========================================
+-- User-Project Volunteer Junction Table
+-- ========================================
+
+CREATE TABLE user_project (
+    user_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    signed_up_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_user_project
+        PRIMARY KEY (user_id, project_id),
+
+    CONSTRAINT fk_user_project_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_user_project_project
+        FOREIGN KEY (project_id)
+        REFERENCES project(project_id)
+        ON DELETE CASCADE
 );
 
 
@@ -378,7 +402,9 @@ VALUES
 -- Insert Categories
 -- ========================================
 
-INSERT INTO category (category_name)
+INSERT INTO category (
+    category_name
+)
 VALUES
     ('Environmental'),
     ('Educational'),
@@ -456,6 +482,10 @@ FROM category;
 SELECT COUNT(*) AS project_category_count
 FROM project_category;
 
+-- Verify volunteer signup count
+SELECT COUNT(*) AS volunteer_signup_count
+FROM user_project;
+
 
 -- ========================================
 -- Display Organizations
@@ -529,6 +559,7 @@ WHERE pc.category_id IS NULL;
 
 -- SELECT * FROM roles;
 -- SELECT * FROM users;
+
 -- INSERT INTO users (
 --     name,
 --     email,
@@ -541,6 +572,7 @@ WHERE pc.category_id IS NULL;
 --     'placeholder_hash',
 --     1
 -- );
+
 -- SELECT
 --     u.user_id,
 --     u.name,
@@ -549,5 +581,53 @@ WHERE pc.category_id IS NULL;
 -- FROM users AS u
 -- JOIN roles AS r
 --     ON u.role_id = r.role_id;
+
 -- DELETE FROM users
 -- WHERE email = 'temp.user@example.com';
+
+
+-- ========================================
+-- Promote Admin User
+-- ========================================
+
+UPDATE users
+SET role_id = (
+    SELECT role_id
+    FROM roles
+    WHERE role_name = 'admin'
+)
+WHERE email = 'admin@example.com';
+
+
+-- ========================================
+-- Verify Admin User
+-- ========================================
+
+SELECT
+    u.user_id,
+    u.name,
+    u.email,
+    r.role_name
+FROM users AS u
+JOIN roles AS r
+    ON u.role_id = r.role_id
+WHERE u.email = 'admin@example.com';
+
+
+-- ========================================
+-- Display Volunteer Signups
+-- ========================================
+
+SELECT
+    up.user_id,
+    u.name AS user_name,
+    u.email,
+    up.project_id,
+    p.title AS project_title,
+    up.signed_up_at
+FROM user_project AS up
+JOIN users AS u
+    ON up.user_id = u.user_id
+JOIN project AS p
+    ON up.project_id = p.project_id
+ORDER BY up.signed_up_at;

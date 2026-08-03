@@ -15,6 +15,46 @@
             </p>
         <% } %>
     </div>
+
+    <section class="dashboard-volunteer-projects">
+        <h2>My Volunteer Projects</h2>
+
+        <% if (volunteerProjects.length > 0) { %>
+            <ul class="card-list volunteer-project-list">
+                <% volunteerProjects.forEach((project) => { %>
+                    <li class="card volunteer-project-card">
+                        <h3>
+                            <a href="/project/<%= project.project_id %>">
+                                <%= project.title %>
+                            </a>
+                        </h3>
+                        <p><strong>Date:</strong> <%= new Date(project.date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        }) %></p>
+                        <p><strong>Location:</strong> <%= project.location %></p>
+                        <p>
+                            <strong>Organization:</strong>
+                            <a href="/organization/<%= project.organization_id %>">
+                                <%= project.organization_name %>
+                            </a>
+                        </p>
+                        <p><%= project.description %></p>
+                        <div class="volunteer-project-actions">
+                            <a class="btn" href="/project/<%= project.project_id %>">View Project Details</a>
+                            <form method="POST" action="/project/<%= project.project_id %>/unvolunteer">
+                                <input type="hidden" name="returnTo" value="dashboard">
+                                <button class="btn btn-danger" type="submit">Remove Me as a Volunteer</button>
+                            </form>
+                        </div>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p class="empty-state">You have not signed up for any volunteer projects yet.</p>
+        <% } %>
+    </section>
 </main>
 
 <%- include('partials/footer') %>
